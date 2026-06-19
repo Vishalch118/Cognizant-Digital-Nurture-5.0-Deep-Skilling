@@ -1,0 +1,55 @@
+public class QuickSortDemo {
+
+    static void quickSort(Order[] orders, int low, int high) {
+
+        if (low < high) {
+
+            int p = partition(orders, low, high);
+
+            quickSort(orders, low, p - 1);
+            quickSort(orders, p + 1, high);
+        }
+    }
+
+    static int partition(Order[] orders, int low, int high) {
+
+        double pivot = orders[high].totalPrice;
+
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+
+            if (orders[j].totalPrice < pivot) {
+
+                i++;
+
+                Order temp = orders[i];
+                orders[i] = orders[j];
+                orders[j] = temp;
+            }
+        }
+
+        Order temp = orders[i + 1];
+        orders[i + 1] = orders[high];
+        orders[high] = temp;
+
+        return i + 1;
+    }
+
+    public static void main(String[] args) {
+
+        Order[] orders = {
+                new Order(101, "Vishal", 5000),
+                new Order(102, "Rahul", 2000),
+                new Order(103, "Amit", 8000)
+        };
+
+        quickSort(orders, 0, orders.length - 1);
+
+        System.out.println("Sorted Orders:");
+
+        for (Order o : orders) {
+            o.display();
+        }
+    }
+}
