@@ -1,0 +1,170 @@
+Scenario 1
+
+SQL> INSERT INTO Customers
+  2  VALUES (
+  3      3,
+  4      'Robert Wilson',
+  5      TO_DATE('1950-01-01','YYYY-MM-DD'),
+  6      20000,
+  7      SYSDATE
+  8  );
+
+1 row created.
+
+SQL> INSERT INTO Loans
+  2  VALUES (
+  3      2,
+  4      3,
+  5      10000,
+  6      8,
+  7      SYSDATE,
+  8      ADD_MONTHS(SYSDATE,24)
+  9  );
+
+1 row created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SET SERVEROUTPUT ON;
+SQL> DECLARE
+  2      v_age NUMBER;
+  3  BEGIN
+  4      FOR cust IN (
+  5          SELECT CustomerID, DOB
+  6          FROM Customers
+  7      )
+  8      LOOP
+  9          v_age := FLOOR(MONTHS_BETWEEN(SYSDATE, cust.DOB)/12);
+ 10
+ 11          IF v_age > 60 THEN
+ 12              UPDATE Loans
+ 13              SET InterestRate = InterestRate - 1
+ 14              WHERE CustomerID = cust.CustomerID;
+ 15
+ 16              DBMS_OUTPUT.PUT_LINE(
+ 17                  'Discount applied to Customer ID: '
+ 18                  || cust.CustomerID
+ 19              );
+ 20          END IF;
+ 21      END LOOP;
+ 22
+ 23      COMMIT;
+ 24  END;
+ 25  /
+Discount applied to Customer ID: 3
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT * FROM Loans;
+
+    LOANID CUSTOMERID LOANAMOUNT INTERESTRATE STARTDATE ENDDATE
+---------- ---------- ---------- ------------ --------- ---------
+         2          3      10000            7 19-JUN-26 19-JUN-28
+
+SQL> ALTER TABLE Customers
+  2  ADD IsVIP VARCHAR2(5);
+
+Table altered.
+
+
+Scenario 2
+
+
+Table altered.
+
+SQL> BEGIN
+  2      FOR cust IN (
+  3          SELECT CustomerID, Balance
+  4          FROM Customers
+  5      )
+  6      LOOP
+  7          IF cust.Balance > 10000 THEN
+  8              UPDATE Customers
+  9              SET IsVIP = 'TRUE'
+ 10              WHERE CustomerID = cust.CustomerID;
+ 11
+ 12              DBMS_OUTPUT.PUT_LINE(
+ 13                  'VIP Status Assigned to Customer ID: '
+ 14                  || cust.CustomerID
+ 15              );
+ 16          END IF;
+ 17      END LOOP;
+ 18
+ 19      COMMIT;
+ 20  END;
+ 21  /
+VIP Status Assigned to Customer ID: 3
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT CustomerID, Name, Balance, IsVIP
+  2  FROM Customers;
+
+CUSTOMERID
+----------
+NAME
+--------------------------------------------------------------------------------
+   BALANCE ISVIP
+---------- -----
+         3
+Robert Wilson
+     20000 TRUE
+
+Scenario 3
+
+
+SQL> SELECT CustomerID, Name
+  2  FROM Customers;
+
+CUSTOMERID
+----------
+NAME
+--------------------------------------------------------------------------------
+         3
+Robert Wilson
+
+
+SQL> INSERT INTO Loans
+  2  VALUES (
+  3      3,
+  4      3,
+  5      5000,
+  6      6,
+  7      SYSDATE,
+  8      SYSDATE + 20
+  9  );
+
+1 row created.
+
+SQL> COMMIT;
+
+SQL> BEGIN
+  2      FOR loan_rec IN (
+  3          SELECT c.Name,
+  4                 l.LoanID,
+  5                 l.EndDate
+  6          FROM Customers c
+  7          JOIN Loans l
+  8          ON c.CustomerID = l.CustomerID
+  9          WHERE l.EndDate BETWEEN SYSDATE
+ 10                             AND SYSDATE + 30
+ 11      )
+ 12      LOOP
+ 13          DBMS_OUTPUT.PUT_LINE(
+ 14              'Reminder: Loan ID '
+ 15              || loan_rec.LoanID
+ 16              || ' for '
+ 17              || loan_rec.Name
+ 18              || ' is due on '
+ 19              || TO_CHAR(loan_rec.EndDate,'DD-MON-YYYY')
+ 20          );
+ 21      END LOOP;
+ 22  END;
+ 23  /
+Reminder: Loan ID 3 for Robert Wilson is due on 09-JUL-2026
+
+PL/SQL procedure successfully completed.
+
+SQL> COMMIT;

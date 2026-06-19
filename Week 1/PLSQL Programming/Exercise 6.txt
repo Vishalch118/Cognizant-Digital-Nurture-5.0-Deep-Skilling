@@ -1,0 +1,121 @@
+------------------Scenario 1-----------------
+SQL> SET SERVEROUTPUT ON;
+SQL>
+SQL> DECLARE
+  2
+  3      CURSOR GenerateMonthlyStatements IS
+  4          SELECT TransactionID,
+  5                 AccountID,
+  6                 Amount,
+  7                 TransactionType,
+  8                 TransactionDate
+  9          FROM Transactions
+ 10          WHERE EXTRACT(MONTH FROM TransactionDate) =
+ 11                EXTRACT(MONTH FROM SYSDATE)
+ 12          AND EXTRACT(YEAR FROM TransactionDate) =
+ 13                EXTRACT(YEAR FROM SYSDATE);
+ 14
+ 15  BEGIN
+ 16
+ 17      FOR txn IN GenerateMonthlyStatements LOOP
+ 18
+ 19          DBMS_OUTPUT.PUT_LINE(
+ 20              'Transaction ID: ' || txn.TransactionID ||
+ 21              ', Account ID: ' || txn.AccountID ||
+ 22              ', Amount: ' || txn.Amount ||
+ 23              ', Type: ' || txn.TransactionType ||
+ 24              ', Date: ' || txn.TransactionDate
+ 25          );
+ 26
+ 27      END LOOP;
+ 28
+ 29  END;
+ 30  /
+Transaction ID: 10, Account ID: 1, Amount: 1000, Type: Deposit, Date: 19-JUN-26
+Transaction ID: 20, Account ID: 1, Amount: 500, Type: Deposit, Date: 19-JUN-26
+
+PL/SQL procedure successfully completed.
+
+---------------------Scenario 2------------------------
+SQL> SET SERVEROUTPUT ON;
+SQL>
+SQL> DECLARE
+  2
+  3      CURSOR ApplyAnnualFee IS
+  4          SELECT AccountID
+  5          FROM Accounts;
+  6
+  7  BEGIN
+  8
+  9      FOR acc IN ApplyAnnualFee LOOP
+ 10
+ 11          UPDATE Accounts
+ 12          SET Balance = Balance - 100
+ 13          WHERE AccountID = acc.AccountID;
+ 14
+ 15          DBMS_OUTPUT.PUT_LINE(
+ 16              'Annual Fee Applied to Account: '
+ 17              || acc.AccountID
+ 18          );
+ 19
+ 20      END LOOP;
+ 21
+ 22      COMMIT;
+ 23
+ 24  END;
+ 25  /
+Annual Fee Applied to Account: 1
+Annual Fee Applied to Account: 2
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT AccountID, Balance
+  2  FROM Accounts;
+
+ ACCOUNTID    BALANCE
+---------- ----------
+         1       6980
+         2       7900
+
+----------------Scenario 3---------------------
+SQL> SET SERVEROUTPUT ON;
+SQL>
+SQL> DECLARE
+  2
+  3      CURSOR UpdateLoanInterestRates IS
+  4          SELECT LoanID
+  5          FROM Loans;
+  6
+  7  BEGIN
+  8
+  9      FOR loan_rec IN UpdateLoanInterestRates LOOP
+ 10
+ 11          UPDATE Loans
+ 12          SET InterestRate = InterestRate - 0.5
+ 13          WHERE LoanID = loan_rec.LoanID;
+ 14
+ 15          DBMS_OUTPUT.PUT_LINE(
+ 16              'Interest Rate Updated for Loan ID: '
+ 17              || loan_rec.LoanID
+ 18          );
+ 19
+ 20      END LOOP;
+ 21
+ 22      COMMIT;
+ 23
+ 24  END;
+ 25  /
+Interest Rate Updated for Loan ID: 2
+Interest Rate Updated for Loan ID: 3
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT LoanID,
+  2         CustomerID,
+  3         InterestRate
+  4  FROM Loans;
+
+    LOANID CUSTOMERID INTERESTRATE
+---------- ---------- ------------
+         2          3          6.5
+         3          3          5.5

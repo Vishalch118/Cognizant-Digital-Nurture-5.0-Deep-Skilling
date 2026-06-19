@@ -1,0 +1,64 @@
+Last Successful login time: Tue Aug 26 2025 16:39:41 +05:30
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> CREATE TABLE Customers (
+  2   CustomerID NUMBER PRIMARY KEY,
+  3   Name VARCHAR2(100),
+  4   DOB DATE,
+  5   Balance NUMBER,
+  6   LastModified DATE
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE Accounts (
+  2   AccountID NUMBER PRIMARY KEY,
+  3   CustomerID NUMBER,
+  4   AccountType VARCHAR2(20),
+  5   Balance NUMBER,
+  6   LastModified DATE,
+  7   FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE Transactions (
+  2   TransactionID NUMBER PRIMARY KEY,
+  3   AccountID NUMBER,
+  4   TransactionDate DATE,
+  5   Amount NUMBER,
+  6   TransactionType VARCHAR2(10),
+  7   FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
+  8  );
+
+Table created.
+
+SQL>
+SQL> CREATE TABLE Loans (
+  2   LoanID NUMBER PRIMARY KEY,
+  3   CustomerID NUMBER,
+  4   LoanAmount NUMBER,
+  5   InterestRate NUMBER,
+  6   StartDate DATE,
+  7   EndDate DATE,
+  8   FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+  9  );
+
+Table created.
+
+SQL> CREATE TABLE Employees (
+  2   EmployeeID NUMBER PRIMARY KEY,
+  3   Name VARCHAR2(100),
+  4   Position VARCHAR2(50),
+  5   Salary NUMBER,
+  6   Department VARCHAR2(50),
+  7   HireDate DATE
+  8  );
+
+Table created.
+
+SQL> COMMIT;
+

@@ -1,0 +1,238 @@
+----------------Scenario 1------------------
+SQL> CREATE OR REPLACE PACKAGE BODY CustomerManagement AS
+  2
+  3      PROCEDURE AddCustomer(
+  4          p_customer_id NUMBER,
+  5          p_name VARCHAR2,
+  6          p_dob DATE,
+  7          p_balance NUMBER
+  8      )
+  9      IS
+ 10      BEGIN
+ 11          INSERT INTO Customers
+ 12          VALUES(
+ 13              p_customer_id,
+ 14              p_name,
+ 15              p_dob,
+ 16              p_balance,
+ 17              SYSDATE,
+ 18              NULL
+ 19          );
+ 20
+ 21          COMMIT;
+ 22      END;
+ 23
+ 24      PROCEDURE UpdateCustomerBalance(
+ 25          p_customer_id NUMBER,
+ 26          p_balance NUMBER
+ 27      )
+ 28      IS
+ 29      BEGIN
+ 30          UPDATE Customers
+ 31          SET Balance = p_balance
+ 32          WHERE CustomerID = p_customer_id;
+ 33
+ 34          COMMIT;
+ 35      END;
+ 36
+ 37      FUNCTION GetCustomerBalance(
+ 38          p_customer_id NUMBER
+ 39      )
+ 40      RETURN NUMBER
+ 41      IS
+ 42          v_balance NUMBER;
+ 43      BEGIN
+ 44          SELECT Balance
+ 45          INTO v_balance
+ 46          FROM Customers
+ 47          WHERE CustomerID = p_customer_id;
+ 48
+ 49          RETURN v_balance;
+ 50      END;
+ 51
+ 52  END CustomerManagement;
+ 53  /
+
+Package body created.
+
+SQL> SELECT CustomerManagement.GetCustomerBalance(3)
+  2  FROM DUAL;
+
+CUSTOMERMANAGEMENT.GETCUSTOMERBALANCE(3)
+----------------------------------------
+                                   25000
+
+----------------Scenario 2---------------------------
+SQL> CREATE OR REPLACE PACKAGE EmployeeManagement AS
+  2
+  3      PROCEDURE HireEmployee(
+  4          p_employee_id NUMBER,
+  5          p_name VARCHAR2,
+  6          p_position VARCHAR2,
+  7          p_salary NUMBER,
+  8          p_department VARCHAR2,
+  9          p_hiredate DATE
+ 10      );
+ 11
+ 12      PROCEDURE UpdateEmployeeSalary(
+ 13          p_employee_id NUMBER,
+ 14          p_salary NUMBER
+ 15      );
+ 16
+ 17      FUNCTION CalculateAnnualSalary(
+ 18          p_employee_id NUMBER
+ 19      ) RETURN NUMBER;
+ 20
+ 21  END EmployeeManagement;
+ 22  /
+
+Package created.
+
+SQL> CREATE OR REPLACE PACKAGE BODY EmployeeManagement AS
+  2
+  3      PROCEDURE HireEmployee(
+  4          p_employee_id NUMBER,
+  5          p_name VARCHAR2,
+  6          p_position VARCHAR2,
+  7          p_salary NUMBER,
+  8          p_department VARCHAR2,
+  9          p_hiredate DATE
+ 10      )
+ 11      IS
+ 12      BEGIN
+ 13          INSERT INTO Employees
+ 14          VALUES(
+ 15              p_employee_id,
+ 16              p_name,
+ 17              p_position,
+ 18              p_salary,
+ 19              p_department,
+ 20              p_hiredate
+ 21          );
+ 22
+ 23          COMMIT;
+ 24      END;
+ 25
+ 26      PROCEDURE UpdateEmployeeSalary(
+ 27          p_employee_id NUMBER,
+ 28          p_salary NUMBER
+ 29      )
+ 30      IS
+ 31      BEGIN
+ 32          UPDATE Employees
+ 33          SET Salary = p_salary
+ 34          WHERE EmployeeID = p_employee_id;
+ 35
+ 36          COMMIT;
+ 37      END;
+ 38
+ 39      FUNCTION CalculateAnnualSalary(
+ 40          p_employee_id NUMBER
+ 41      )
+ 42      RETURN NUMBER
+ 43      IS
+ 44          v_salary NUMBER;
+ 45      BEGIN
+ 46          SELECT Salary
+ 47          INTO v_salary
+ 48          FROM Employees
+ 49          WHERE EmployeeID = p_employee_id;
+ 50
+ 51          RETURN v_salary * 12;
+ 52      END;
+ 53
+ 54  END EmployeeManagement;
+ 55  /
+
+Package body created.
+
+SQL> SELECT EmployeeManagement.CalculateAnnualSalary(1)
+  2  FROM DUAL;
+
+EMPLOYEEMANAGEMENT.CALCULATEANNUALSALARY(1)
+-------------------------------------------
+                                     970200
+                                    
+---------------------Scenario 3----------------------
+
+SQL> CREATE OR REPLACE PACKAGE AccountOperations AS
+  2
+  3      PROCEDURE OpenAccount(
+  4          p_account_id NUMBER,
+  5          p_customer_id NUMBER,
+  6          p_account_type VARCHAR2,
+  7          p_balance NUMBER
+  8      );
+  9
+ 10      PROCEDURE CloseAccount(
+ 11          p_account_id NUMBER
+ 12      );
+ 13
+ 14      FUNCTION GetTotalBalance(
+ 15          p_customer_id NUMBER
+ 16      ) RETURN NUMBER;
+ 17
+ 18  END AccountOperations;
+ 19  /
+
+Package created.
+
+SQL> CREATE OR REPLACE PACKAGE BODY AccountOperations AS
+  2
+  3      PROCEDURE OpenAccount(
+  4          p_account_id NUMBER,
+  5          p_customer_id NUMBER,
+  6          p_account_type VARCHAR2,
+  7          p_balance NUMBER
+  8      )
+  9      IS
+ 10      BEGIN
+ 11          INSERT INTO Accounts
+ 12          VALUES(
+ 13              p_account_id,
+ 14              p_customer_id,
+ 15              p_account_type,
+ 16              p_balance,
+ 17              SYSDATE
+ 18          );
+ 19
+ 20          COMMIT;
+ 21      END;
+ 22
+ 23      PROCEDURE CloseAccount(
+ 24          p_account_id NUMBER
+ 25      )
+ 26      IS
+ 27      BEGIN
+ 28          DELETE FROM Accounts
+ 29          WHERE AccountID = p_account_id;
+ 30
+ 31          COMMIT;
+ 32      END;
+ 33
+ 34      FUNCTION GetTotalBalance(
+ 35          p_customer_id NUMBER
+ 36      )
+ 37      RETURN NUMBER
+ 38      IS
+ 39          v_total NUMBER;
+ 40      BEGIN
+ 41          SELECT SUM(Balance)
+ 42          INTO v_total
+ 43          FROM Accounts
+ 44          WHERE CustomerID = p_customer_id;
+ 45
+ 46          RETURN NVL(v_total,0);
+ 47      END;
+ 48
+ 49  END AccountOperations;
+ 50  /
+
+Package body created.
+
+SQL> SELECT AccountOperations.GetTotalBalance(3)
+  2  FROM DUAL;
+
+ACCOUNTOPERATIONS.GETTOTALBALANCE(3)
+------------------------------------
+                               14880

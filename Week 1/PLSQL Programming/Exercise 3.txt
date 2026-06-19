@@ -1,0 +1,122 @@
+---------------Scenario 1------------------
+SQL> CREATE OR REPLACE PROCEDURE ProcessMonthlyInterest
+  2  IS
+  3  BEGIN
+  4      UPDATE Accounts
+  5      SET Balance = Balance + (Balance * 0.01)
+  6      WHERE AccountType = 'Savings';
+  7
+  8      COMMIT;
+  9
+ 10      DBMS_OUTPUT.PUT_LINE(
+ 11          'Monthly interest processed successfully'
+ 12      );
+ 13  END;
+ 14  /
+
+Procedure created.
+
+SQL> EXEC ProcessMonthlyInterest;
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT AccountID, AccountType, Balance
+  2  FROM Accounts;
+
+ ACCOUNTID ACCOUNTTYPE             BALANCE
+---------- -------------------- ----------
+         1 Savings                    8080
+         2 Checking                   7000
+
+----------------------Scenario 2------------------------------
+SQL> CREATE OR REPLACE PROCEDURE UpdateEmployeeBonus(
+  2      p_department IN VARCHAR2,
+  3      p_bonus      IN NUMBER
+  4  )
+  5  IS
+  6  BEGIN
+  7      UPDATE Employees
+  8      SET Salary = Salary + (Salary * p_bonus / 100)
+  9      WHERE Department = p_department;
+ 10
+ 11      COMMIT;
+ 12
+ 13      DBMS_OUTPUT.PUT_LINE(
+ 14          'Bonus updated successfully'
+ 15      );
+ 16  END;
+ 17  /
+
+Procedure created.
+
+SQL> EXEC UpdateEmployeeBonus('HR',5);
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT EmployeeID,
+  2         Name,
+  3         Department,
+  4         Salary
+  5  FROM Employees;
+
+EMPLOYEEID
+----------
+NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+         1
+Alice Johnson
+HR                                                      80850
+
+------------------------Scenario 3-----------------------------------
+SQL> CREATE OR REPLACE PROCEDURE TransferFunds(
+  2      p_from_account IN NUMBER,
+  3      p_to_account   IN NUMBER,
+  4      p_amount       IN NUMBER
+  5  )
+  6  IS
+  7      v_balance NUMBER;
+  8  BEGIN
+  9      SELECT Balance
+ 10      INTO v_balance
+ 11      FROM Accounts
+ 12      WHERE AccountID = p_from_account;
+ 13
+ 14      IF v_balance < p_amount THEN
+ 15          DBMS_OUTPUT.PUT_LINE(
+ 16              'Insufficient Funds'
+ 17          );
+ 18      ELSE
+ 19
+ 20          UPDATE Accounts
+ 21          SET Balance = Balance - p_amount
+ 22          WHERE AccountID = p_from_account;
+ 23
+ 24          UPDATE Accounts
+ 25          SET Balance = Balance + p_amount
+ 26          WHERE AccountID = p_to_account;
+ 27
+ 28          COMMIT;
+ 29
+ 30          DBMS_OUTPUT.PUT_LINE(
+ 31              'Transfer Successful'
+ 32          );
+ 33      END IF;
+ 34  END;
+ 35  /
+
+Procedure created.
+
+SQL> EXEC TransferFunds(1,2,1000);
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT AccountID, Balance
+  2  FROM Accounts
+  3  ORDER BY AccountID;
+
+ ACCOUNTID    BALANCE
+---------- ----------
+         1       7080
+         2       8000
