@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.cognizant.tdd.OrderedTests
+Test set: com.cognizant.tdd.ApiServiceTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.cognizant.tdd.OrderedTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.cognizant.tdd.ApiServiceTest

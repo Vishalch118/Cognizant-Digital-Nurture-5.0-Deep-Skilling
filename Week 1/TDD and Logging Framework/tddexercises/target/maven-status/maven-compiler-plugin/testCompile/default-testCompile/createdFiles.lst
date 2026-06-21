@@ -1,6 +1,6 @@
-com\cognizant\tdd\EvenCheckerTest.class
 com\cognizant\tdd\AppTest.class
-com\cognizant\tdd\CalculatorAAATest.class
 com\cognizant\tdd\AllTests.class
 com\cognizant\tdd\CalculatorTest.class
+com\cognizant\tdd\EvenCheckerTest.class
+com\cognizant\tdd\CalculatorAAATest.class
 com\cognizant\tdd\AssertionsTest.class
