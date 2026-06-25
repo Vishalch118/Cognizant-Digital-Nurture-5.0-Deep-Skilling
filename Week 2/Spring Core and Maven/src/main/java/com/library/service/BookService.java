@@ -10,6 +10,11 @@ public class BookService {
     private BookRepository bookRepository;
 
     @Autowired
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    @Autowired
     public void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
