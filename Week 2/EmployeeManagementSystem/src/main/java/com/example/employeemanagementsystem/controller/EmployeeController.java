@@ -57,4 +57,24 @@ public class EmployeeController {
 
         return "Employee deleted successfully";
     }
+
+    @GetMapping("/search")
+    public List<Employee> searchEmployeesByName(@RequestParam String name) {
+        return employeeRepository.findByNameContaining(name);
+    }
+
+    @GetMapping("/email")
+    public Employee getEmployeeByEmail(@RequestParam String email) {
+        return employeeRepository.getEmployeeByEmail(email);
+    }
+
+    @GetMapping("/native")
+    public List<Employee> getEmployeesByNameNative(@RequestParam String name) {
+        return employeeRepository.getEmployeesByNameNative(name);
+    }
+
+    @GetMapping("/named")
+    public Employee getEmployeeByEmailNamed(@RequestParam String email) {
+        return employeeRepository.findByEmailNamed(email);
+    }
 }
