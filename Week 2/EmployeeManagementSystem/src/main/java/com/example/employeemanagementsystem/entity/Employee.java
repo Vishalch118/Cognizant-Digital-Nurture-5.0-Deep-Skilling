@@ -2,6 +2,7 @@ package com.example.employeemanagementsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "employees")
@@ -16,6 +17,7 @@ public class Employee {
 
     private String email;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
