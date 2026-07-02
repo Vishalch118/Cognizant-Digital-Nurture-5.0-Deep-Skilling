@@ -13,4 +13,16 @@ public class CountryService {
 
         return context.getBean("country", Country.class);
     }
+
+    public Country getCountry(String code) {
+
+        if ("IN".equalsIgnoreCase(code)) {
+            Country country = new Country();
+            country.setCode("IN");
+            country.setName("India");
+            return country;
+        }
+
+        return null;
+    }
 }
