@@ -8,13 +8,19 @@
         <outputRelativeToContentRoot value="true" />
         <module name="library-management-boot" />
         <module name="library-management" />
+        <module name="loan" />
         <module name="tddexercises" />
+        <module name="spring-learn" />
+        <module name="account" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="account" options="-parameters" />
       <module name="library-management-boot" options="-parameters" />
+      <module name="loan" options="-parameters" />
+      <module name="spring-learn" options="-parameters" />
       <module name="tddexercises" options="-parameters" />
     </option>
   </component>
