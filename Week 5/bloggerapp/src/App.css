@@ -1,0 +1,43 @@
+.App {
+  padding: 60px;
+  font-family: Arial, sans-serif;
+}
+
+.details-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.details-section {
+  width: 280px;
+  min-height: 420px;
+  padding: 0 45px;
+  border-right: 5px solid green;
+}
+
+.last-section {
+  border-right: none;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  margin-top: 25px;
+  margin-bottom: 8px;
+}
+
+h4 {
+  margin-top: 5px;
+}
+
+p {
+  line-height: 1.5;
+}
